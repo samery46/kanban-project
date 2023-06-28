@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('home'); // Diperbarui
-});
-Route::get('/tasks/', [TaskController::class, 'index']); // Ditambahkan
+    return view('home');
+})->name('home'); // name ditambahkan;
+
+Route::get('/tasks/', [
+    TaskController::class, 'index'
+])->name('tasks.index'); // Ditambahkan
