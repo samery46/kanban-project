@@ -147,4 +147,14 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.progress');
     }
+    public function check(int $id, Request $request)
+    {
+        $task = Task::findOrFail($id);
+
+        $task->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('tasks.index');
+    }
 }

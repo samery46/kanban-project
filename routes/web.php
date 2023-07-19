@@ -32,4 +32,5 @@ Route::prefix('tasks')
         Route::get('progress', 'progress')->name('progress');
         Route::patch('{id}/move', 'move')->name('move');
         Route::patch('{id}/complete', 'complete')->name('complete');
+        Route::patch('{id}/check', 'check')->name('check');
     });
