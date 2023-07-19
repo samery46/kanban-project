@@ -55,13 +55,16 @@
         </div>
         <div class="table-body-owner-name">{{ $task->user->name }}</div>        
         <!-- Ditambahkan -->
-        <div>
-          <a href="{{ route('tasks.edit', ['id' => $task->id]) }}">Edit</a>
-        <!-- Tambahkan Tautan Delete -->
-          <a href="{{ route('tasks.delete', ['id' => $task->id]) }}">Delete</a>          
+        <div class="table-body-links">
+          @can('update', $task)
+            <a href="{{ route('tasks.edit', ['id' => $task->id]) }}">Edit</a>
+          @endcan
+          @can('delete', $task)
+            <a href="{{ route('tasks.delete', ['id' => $task->id]) }}">Delete</a>
+          @endcan
         </div>
                 
-        </div>
+      </div>
     @endforeach
   </div>
   @endsection
