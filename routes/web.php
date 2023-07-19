@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TaskController; // Ditambahkan
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,10 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');
-})->name('home'); // name ditambahkan;
+})->name('home')->middleware('auth'); // name ditambahkan;
 
 Route::prefix('tasks')
     ->name('tasks.')
+    ->middleware('auth')
     ->controller(TaskController::class)
     ->group(function () {
         Route::get('/', 'index')->name('index');
@@ -33,4 +35,20 @@ Route::prefix('tasks')
         Route::patch('{id}/move', 'move')->name('move');
         Route::patch('{id}/complete', 'complete')->name('complete');
         Route::patch('{id}/check', 'check')->name('check');
+    });
+
+Route::name('auth.')
+    ->controller(AuthController::class)
+    ->group(function () {
+
+        Route::middleware('guest')->group(function () {
+            Route::get('signup', 'signupForm')->name('signupForm');
+            Route::post('signup', 'signup')->name('signup');
+            Route::get('login', 'loginForm')->name('loginForm');
+            Route::post('login', 'login')->name('login');
+        });
+
+        Route::middleware('auth')->group(function () {
+            Route::get('logout', 'logout')->name('logout');
+        });
     });
