@@ -6,6 +6,7 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class TaskController extends Controller
 {
     // 
@@ -60,6 +61,8 @@ class TaskController extends Controller
         $pageTitle = 'Edit Task';
         $task = Task::find($id);
 
+        Gate::authorize('update', $task);
+
         return view('tasks.edit', ['pageTitle' => $pageTitle, 'task' => $task]);
     }
 
@@ -74,6 +77,8 @@ class TaskController extends Controller
             ],
             $request->all()
         );
+
+        Gate::authorize('update', $task);
         $task->update([
             //data task yang berasal dari formulir
             'name' => $request->name,
@@ -89,11 +94,16 @@ class TaskController extends Controller
         $pageTitle = 'Delete Task';
         $task = Task::find($id); // diperbaharui
 
+        Gate::authorize('delete', $task);
+
         return view('tasks.delete', ['pageTitle' => $pageTitle, 'task' => $task]);
     }
     public function destroy($id)
     {
         $task = Task::find($id);
+
+        Gate::authorize('delete', $task);
+
         $task->delete();
         return redirect()->route('tasks.index');
     }
