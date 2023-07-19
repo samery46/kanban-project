@@ -144,6 +144,11 @@ body {
     width: 15%;
 }
 
+.task-list-header-owner-name {
+    padding: 16px;
+    width: 15%;
+}
+
 .table-body {
     display: flex;
     align-items: center;
@@ -175,6 +180,12 @@ body {
 }
 
 .table-body-progress {
+    width: 15%;
+    padding: 16px;
+    border-right: 1px solid #d8d8d8;    
+}
+
+.table-body-owner-name {
     width: 15%;
     padding: 16px;
 }
