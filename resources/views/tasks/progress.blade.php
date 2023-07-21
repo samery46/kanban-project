@@ -16,6 +16,7 @@
         'leftStatus' => null,
         'rightStatus' => Task::STATUS_IN_PROGRESS,
         'complete' => Task::STATUS_COMPLETED,
+        'status' => Task::STATUS_NOT_STARTED,
       ])
 
       @include('partials.task_column', [
@@ -24,6 +25,7 @@
         'leftStatus' => Task::STATUS_NOT_STARTED,
         'rightStatus' => Task::STATUS_IN_REVIEW,
         'complete' => Task::STATUS_COMPLETED,
+        'status' => Task::STATUS_IN_PROGRESS,
       ])
 
       @include('partials.task_column', [
@@ -32,6 +34,7 @@
         'leftStatus' => Task::STATUS_IN_PROGRESS,
         'rightStatus' => Task::STATUS_COMPLETED,
         'complete' => Task::STATUS_COMPLETED,
+        'status' => Task::STATUS_IN_REVIEW,
       ])
 
       @include('partials.task_column', [
@@ -39,6 +42,7 @@
         'tasks' => $tasks[Task::STATUS_COMPLETED],
         'leftStatus' => Task::STATUS_IN_REVIEW,
         'rightStatus' => null,
+        'status' => Task::STATUS_COMPLETED,
       ])
     </div>
   </div>

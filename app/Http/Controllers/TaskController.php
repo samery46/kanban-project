@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -24,12 +24,10 @@ class TaskController extends Controller
         ]);
     }
 
-    public function create()
+    public function create($status = null)
     {
         $pageTitle = 'Create Task'; // Ditambahkan        
-        return view('tasks.create', [
-            'pageTitle' => $pageTitle //Ditambahkan
-        ]);
+        return view('tasks.create', ['pageTitle' => $pageTitle, 'status' => $status]); //Ditambahkan
     }
 
     // Tambahkan method store()
@@ -59,7 +57,7 @@ class TaskController extends Controller
     public function edit($id)
     {
         $pageTitle = 'Edit Task';
-        $task = Task::find($id);
+        $task = Task::findOrFail($id);
 
         Gate::authorize('update', $task);
 
@@ -68,7 +66,7 @@ class TaskController extends Controller
 
     public function update(Request $request, $id)
     {
-        $task = Task::find($id);
+        $task = Task::findOrFail($id);
         $request->validate(
             [
                 'name' => 'required',
@@ -92,7 +90,7 @@ class TaskController extends Controller
     public function delete($id)
     {
         $pageTitle = 'Delete Task';
-        $task = Task::find($id); // diperbaharui
+        $task = Task::findOrFail($id); // diperbaharui
 
         Gate::authorize('delete', $task);
 
@@ -143,6 +141,7 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
+        Gate::authorize('move', $task);
         $task->update([
             'status' => $request->status,
         ]);
@@ -153,6 +152,7 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
+        Gate::authorize('complete', $task);
         $task->update([
             'status' => $request->status,
         ]);
@@ -163,6 +163,7 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
+        Gate::authorize('check', $task);
         $task->update([
             'status' => $request->status,
         ]);
