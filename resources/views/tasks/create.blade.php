@@ -37,11 +37,11 @@
     <div class="form-item">
       <label>Progress:</label>
       <!-- Tambahkan name attribute -->
-      <select class="form-input" name="status">      
-        <option @if(old('status') == 'not_started') selected @endif value="not_started">Not Started</option>
-        <option @if(old('status') == 'in_progress') selected @endif value="in_progress">In Progress</option>
-        <option @if(old('status') == 'in_review') selected @endif value="in_review">Waiting/In Review</option>
-        <option @if(old('status') == 'completed') selected @endif value="completed">Completed</option>
+      <select class="form-input" name="status">        
+        <option @if($status == 'not_started') selected @endif value="not_started">Not Started</option>
+        <option @if($status == 'in_progress') selected @endif value="in_progress">In Progress</option>
+        <option @if($status == 'in_review') selected @endif value="in_review">Waiting/In Review</option>
+        <option @if($status == 'completed') selected @endif value="completed">Completed</option>      
       </select>
       <!-- Menampilkan pesan error untuk status -->
       @error('status')
