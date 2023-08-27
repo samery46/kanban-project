@@ -26,9 +26,7 @@
 
     @foreach ($tasks as $index => $task)
       <div class="table-body">
-        <div class="table-body-task-name">
-          
-          @can('check', $task) <!-- Policy check-->
+        <div class="table-body-task-name">          
           @if ($task->status == 'completed')
           <div class="material-icons task-progress-card-top-checked">check_circle</div>
           @else
@@ -38,8 +36,7 @@
           <button class="material-icons task-progress-card-top-check">check_circle</button>
           </form>          
           @endif
-          @endcan <!-- End Policy check-->
-
+          
           {{ $task->name }}
         </div>
         <div class="table-body-detail"> {{ $task->detail }} </div>
@@ -69,10 +66,10 @@
         <div class="table-body-owner-name">{{ $task->user->name }}</div>        
         <!-- Ditambahkan -->
         <div class="table-body-links">
-          @can('update', $task)
+          @canany(['updateAnyTask', 'performAsTaskOwner'], $task)
             <a href="{{ route('tasks.edit', ['id' => $task->id]) }}">Edit</a>
           @endcan
-          @can('delete', $task)
+           @canany(['deleteAnyTask', 'performAsTaskOwner'], $task)
             <a href="{{ route('tasks.delete', ['id' => $task->id]) }}">Delete</a>
           @endcan
         </div>

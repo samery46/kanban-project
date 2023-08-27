@@ -58,31 +58,67 @@ class RoleController extends Controller
 
     public function edit($id)
     {
-        //
+        $pageTitle = 'Edit Role Permissions';
+        $role      = Role::with('permissions')->findOrFail($id);
+        $permissions = Permission::all();
+        Gate::authorize('manageRoles', Role::class);
+        return view('roles.edit', [
+            'role'        => $role,
+            'pageTitle'   => $pageTitle,
+            'permissions' => $permissions
+        ]);
     }
+
 
     public function update($id, Request $request)
     {
-        //
+        $request->validate([
+            'name'          => ['required'],
+            'permissionIds' => ['required'],
+        ]);
+
+        $role = Role::with('permissions')->findOrFail($id);
+
+        Gate::authorize('manageRoles', Role::class);
+        DB::beginTransaction();
+        try {
+            $role->update([
+                'name' => $request->name,
+            ]);
+            $role->permissions()->sync($request->permissionIds);
+            DB::commit();
+            return redirect()->route('roles.index');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     public function delete($id)
     {
         $pageTitle = 'Delete Role Permission';
-        $permissions = Permission::findOrFail($id); // diperbaharui
+        $role      = Role::with('permissions')->findOrFail($id); // diperbaharui
 
-        Gate::authorize('delete', $permissions);
-
-        return view('roles.delete', ['pageTitle' => $pageTitle, 'permission' => $permissions]);
+        Gate::authorize('manageRoles', Role::class);
+        return view('roles.delete', ['pageTitle' => $pageTitle, 'role' => $role]);
     }
 
     public function destroy($id)
     {
-        $permissions = Permission::find($id);
+        $role      = Role::with('permissions')->findOrFail($id); // diperbaharui
 
-        Gate::authorize('delete', $permissions);
+        Gate::authorize('manageRoles', Role::class);
+        DB::beginTransaction();
+        try {
 
-        $permissions->delete();
+            $role->delete();
+            DB::commit();
+            return redirect()->route('roles.index');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+
         return redirect()->route('roles.index');
     }
 }
