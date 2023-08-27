@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Policies;
-
+use App\Models\Task;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class TaskPolicy
 {
@@ -14,26 +14,26 @@ class TaskPolicy
         //
     }
 
-    public function update($user, $task)
+    public function update(User $user, Task $task): bool
     {
         return $user->id == $task->user_id;
     }
 
-    public function delete($user, $task)
+    public function delete($user, $task): bool
     {
         return $user->id == $task->user_id;
     }
 
-    public function move($user, $task)
+    public function move($user, $task): bool
     {
         return $user->id == $task->user_id;
     }
-    public function complete($user, $task)
+    public function complete(User $user, Task $task): bool
     {
         return $user->id == $task->user_id;
     }
 
-    public function check($user, $task)
+    public function check($user, $task): bool
     {
         return $user->id == $task->user_id;
     }
