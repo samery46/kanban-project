@@ -1,6 +1,6 @@
 <div class="task-progress-card">
   <div class="task-progress-card-left">
-    @can('complete', $task) <!-- Policy Complete-->
+    @canany(['updateAnyTask', 'performAsTaskOwner'], $task) <!-- Policy Complete-->
     @if ($task->status == 'completed')
       <div class="material-icons task-progress-card-top-checked">check_circle</div>
     @else
@@ -43,7 +43,7 @@
 
   <div class="@if ($leftStatus) task-progress-card-left @else task-progress-card-right @endif">
 
-    @can('move', $task) <!-- Policy Move-->
+    @canany(['updateAnyTask', 'performAsTaskOwner'], $task) <!-- Policy Move-->
     @if ($leftStatus)
       <form action="{{ route('tasks.move', ['id' => $task->id, 'status' => $leftStatus]) }}" method="POST">
         @method('patch')
