@@ -19,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Task::class => TaskPolicy::class, // Ditambahkan
+        Role::class => RolePolicy::class, // Ditambahkan
     ];
 
     /**
