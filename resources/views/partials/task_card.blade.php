@@ -10,9 +10,10 @@
       <button class="material-icons task-progress-card-top-check">check_circle</button>
       </form>
     @endif
-    @endcan <!-- End Policy Complete-->
-
+    @endcan <!-- End Policy Update-->
+    @canany(['updateAnyTask', 'performAsTaskOwner'], $task)
     <a href="{{ route('tasks.edit', ['id' => $task->id]) }}" class="material-icons task-progress-card-top-edit">more_vert</a>
+    @endcan <!-- End Policy Update-->
   </div>
   <p class="task-progress-card-title">{{ $task->name }}</p>
   <div>

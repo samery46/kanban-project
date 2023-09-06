@@ -16,6 +16,12 @@ class RoleController extends Controller
         $pageTitle = 'Role Lists';
         $roles = Role::all();
 
+        // if (Gate::allows('viewAnyRoles', User::class)) {
+        //     $permissions = Permissions::all();
+        // } else {
+        //     $permissions = Permissions::where('user_id', Auth::user()->id)->get();
+        // }
+        Gate::authorize('viewAnyRoles', Role::class);
         return view('roles.index', [
             'pageTitle' => $pageTitle,
             'roles' => $roles,
@@ -24,8 +30,10 @@ class RoleController extends Controller
 
     public function create()
     {
+        Gate::authorize('createNewRoles', Role::class);
         $pageTitle = 'Add Role';
         $permissions = Permission::all();
+
         return view('roles.create', [
             'pageTitle' => $pageTitle,
             'permissions' => $permissions,
@@ -38,6 +46,8 @@ class RoleController extends Controller
             'name' => ['required'],
             'permissionIds' => ['required'],
         ]);
+
+        Gate::authorize('updateAnyRoles', Role::class);
 
         DB::beginTransaction();
         try {
@@ -58,10 +68,12 @@ class RoleController extends Controller
 
     public function edit($id)
     {
+
+        Gate::authorize('updateAnyRoles', Role::class);
         $pageTitle = 'Edit Role Permissions';
         $role      = Role::with('permissions')->findOrFail($id);
         $permissions = Permission::all();
-        Gate::authorize('manageRoles', Role::class);
+        // Gate::authorize('manageUserRoles', Role::class);
         return view('roles.edit', [
             'role'        => $role,
             'pageTitle'   => $pageTitle,
@@ -69,9 +81,10 @@ class RoleController extends Controller
         ]);
     }
 
-
     public function update($id, Request $request)
     {
+
+        Gate::authorize('updateAnyRoles', Role::class);
         $request->validate([
             'name'          => ['required'],
             'permissionIds' => ['required'],
@@ -79,7 +92,7 @@ class RoleController extends Controller
 
         $role = Role::with('permissions')->findOrFail($id);
 
-        Gate::authorize('manageRoles', Role::class);
+        // Gate::authorize('manageUserRoles', Role::class);
         DB::beginTransaction();
         try {
             $role->update([
@@ -96,18 +109,20 @@ class RoleController extends Controller
 
     public function delete($id)
     {
-        $pageTitle = 'Delete Role Permission';
-        $role      = Role::with('permissions')->findOrFail($id); // diperbaharui
 
-        Gate::authorize('manageRoles', Role::class);
+        Gate::authorize('deleteAnyRoles', Role::class);
+        $pageTitle = 'Delete Role Permission';
+        $role      = Role::findOrFail($id); // diperbaharui        
+
         return view('roles.delete', ['pageTitle' => $pageTitle, 'role' => $role]);
     }
 
     public function destroy($id)
     {
+
+        Gate::authorize('deleteAnyRoles', Role::class);
         $role      = Role::with('permissions')->findOrFail($id); // diperbaharui
 
-        Gate::authorize('manageRoles', Role::class);
         DB::beginTransaction();
         try {
 
@@ -119,6 +134,6 @@ class RoleController extends Controller
             throw $th;
         }
 
-        return redirect()->route('roles.index');
+        // return redirect()->route('roles.index');
     }
 }

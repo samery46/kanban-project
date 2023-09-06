@@ -10,6 +10,9 @@
       <div class="task-list-table-head">
         <div class="task-list-header-task-name">User</div>
         <div class="task-list-header-detail">Roles</div>
+        @can('updateAnyRoles', App\Models\Role::class)
+        <div class="task-list-header-detail">Action</div>        
+        @endcan
       </div>
 
       @foreach ($users as $user)
@@ -18,11 +21,14 @@
           <div class="table-body-user-role">
               {{ $user->role ? $user->role->name : 'No Role'}}
           </div>
+
+          @can('updateAnyRoles', App\Models\Role::class)
           <div class="table-body-link">
             <a href="{{ route('users.editRole', ['id' => $user->id]) }}">
               Edit Role
             </a>
           </div>
+          @endcan
         </div>
       @endforeach
     </div>

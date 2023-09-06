@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User; // Ditambahkan
 use App\Models\Role; // Ditambahkan
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate; // Ditambahkan
 
 class UserController extends Controller
 {
@@ -12,6 +13,8 @@ class UserController extends Controller
     {
         $pageTitle = 'Users List';
         $users = User::all();
+
+        Gate::authorize('viewAnyRoles', Role::class);
         return view('users.index', [
             'pageTitle' => $pageTitle,
             'users' => $users,

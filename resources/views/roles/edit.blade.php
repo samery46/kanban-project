@@ -14,22 +14,17 @@
         @error('name')
           <div class="alert-danger">{{ $message }}</div>
         @enderror
-
         <input class="form-input" type="text" value="{{ old('name') ? old('name') : $role->name }}" name="name">
       </div>
 
-
       <div class="form-item">
         <label>Permissions:</label>
-
         @error('permissions')
           <div class="alert-danger">{{ $message }}</div>
         @enderror
-
         @php
           $selectedPermissionIds = $role->permissions->pluck('id')->toArray();
         @endphp
-
         @foreach ($permissions as $permission)
           <div>
             <input
