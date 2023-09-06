@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Http\Controllers\TaskFileController;
+use App\Models\TaskFile;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,13 +20,13 @@ class TaskController extends Controller
     public function index()
     {
         $pageTitle = 'Task List'; // Ditambahkan
-        $tasks = Task::all();
+        // $tasks = Task::all();
 
-        // if (Gate::allows('viewAnyTask', Task::class)) {
-        //     $tasks = Task::all();
-        // } else {
-        //     $tasks = Task::where('user_id', Auth::user()->id)->get();
-        // }
+        if (Gate::allows('viewAnyTask', Task::class)) {
+            $tasks = Task::all();
+        } else {
+            $tasks = Task::where('user_id', Auth::user()->id)->get();
+        }
         return view('tasks.index', [
             'pageTitle' => $pageTitle, //Ditambahkan
             'tasks' => $tasks,
@@ -60,7 +60,8 @@ class TaskController extends Controller
         // Tambahkan database transaction
         DB::beginTransaction();
         try {
-            Task::create([
+
+            $task = Task::create([
                 'name' => $request->name,
                 'detail' => $request->detail,
                 'due_date' => $request->due_date,
@@ -157,9 +158,15 @@ class TaskController extends Controller
     {
         $title = 'Task Progress';
 
-        $allTasks = Task::all();
+        if (Gate::allows('viewAnyTask', Task::class)) {
+            $tasks = Task::all();
+        } else {
+            $tasks = Task::where('user_id', Auth::user()->id)->get();
+        }
 
-        $filteredTasks = $allTasks->groupBy('status');
+        // $allTasks = Task::all();
+
+        $filteredTasks = $tasks->groupBy('status');
 
         $tasks = [
             Task::STATUS_NOT_STARTED => $filteredTasks->get(
@@ -179,6 +186,10 @@ class TaskController extends Controller
                 []
             ),
         ];
+
+        // dd($tasks);
+
+
 
         return view('tasks.progress', [
             'pageTitle' => $title,

@@ -17,11 +17,10 @@
       <div class="task-list-header-task-name">Task Name</div>
       <div class="task-list-header-detail">Detail</div>
       <div class="task-list-header-due-date">Due Date</div>
-      <div class="task-list-header-progress">Progress</div>
-      <div class="task-list-header-file">Files</div> <!-- Ditambahkan -->
+      <div class="task-list-header-progress">Progress</div>      
       <div class="task-list-header-owner-name">Owner</div>
-      <div class="task-list-header-links"></div> <!-- Ditambahkan -->      
-      <div class="task-list-header-owner-name">Action</div>    
+      <div class="task-list-header-links">Action</div>
+      <div class="task-list-header-file">Files</div> <!-- Ditambahkan --> 
     </div>
 
     @foreach ($tasks as $index => $task)
@@ -56,24 +55,22 @@
               Not Started
           @endswitch
         </div>
-        <div class="table-body-file">
-          @foreach ($task->files as $file)
-            <a href="{{ route('tasks.files.show', ['task_id' => $task->id, 'id' => $file->id]) }}">
-              {{ $file->filename }}</a>
-          @endforeach
-        </div>
-
         <div class="table-body-owner-name">{{ $task->user->name }}</div>        
         <!-- Ditambahkan -->
         <div class="table-body-links">
           @canany(['updateAnyTask', 'performAsTaskOwner'], $task)
             <a href="{{ route('tasks.edit', ['id' => $task->id]) }}">Edit</a>
           @endcan
-           @canany(['deleteAnyTask', 'performAsTaskOwner'], $task)
+          @canany(['deleteAnyTask', 'performAsTaskOwner'], $task)
             <a href="{{ route('tasks.delete', ['id' => $task->id]) }}">Delete</a>
           @endcan
         </div>
-                
+        <div class="table-body-file">
+          @foreach ($task->files as $file)
+            <a target="_blank" href="{{ route('tasks.files.show', ['task_id' => $task->id, 'id' => $file->id]) }}">
+              {{ $file->filename }}</a>
+          @endforeach
+        </div>        
       </div>
     @endforeach
   </div>

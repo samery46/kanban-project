@@ -59,6 +59,7 @@
       <a href="{{ route('tasks.files.destroy', ['task_id' => $task->id, 'id' => $file->id]) }}" onclick="event.preventDefault(); document.getElementById('file-delete-form-{{ $file->id }}').submit();">
         <span class="material-icons">delete</span>
       </a>
+      
       <form id="file-delete-form-{{ $file->id }}" action="{{ route('tasks.files.destroy', ['task_id' => $task->id, 'id' => $file->id]) }}" method="POST" style="display: none;">
         @csrf
         @method('delete')

@@ -126,12 +126,12 @@ body {
 
 .task-list-header-task-name {
     padding: 16px;
-    width: 15%;
+    width: 17%;
 }
 
 .task-list-header-detail {
-    padding: 16px;
-    width: 30%;
+    padding: 20px;
+    width: 20%;
 }
 
 .task-list-header-due-date {
@@ -141,7 +141,7 @@ body {
 
 .task-list-header-progress {
     padding: 16px;
-    width: 15%;
+    width: 12%;
 }
 
 .task-list-header-file {
@@ -151,7 +151,7 @@ body {
 
 .task-list-header-owner-name {
     padding: 16px;
-    width: 15%;
+    width: 10%;
 }
 
 .task-list-header-links {
@@ -177,42 +177,38 @@ body {
 }
 
 .table-body-detail {
-    width: 25%;
+    width: 20%;
     padding: 16px;
     overflow-wrap: anywhere;
     border-right: 1px solid #d8d8d8;
 }
 
 .table-body-due-date {
-    width: 10%;
+    width: 8%;
     padding: 16px;
     border-right: 1px solid #d8d8d8;
 }
 
 .table-body-progress {
-    width: 12%;
+    width: 10%;
     padding: 16px;
     border-right: 1px solid #d8d8d8;    
 }
 
 .table-body-owner-name {
-    width: 12%;
+    width: 10%;
     padding: 16px;
 }
 
 .table-body-files {
     width: 15%;
     padding: 16px;
+    overflow-wrap: anywhere;
     border-right: 1px solid #d8d8d8;
   }
-  
-  .table-body-owner-name {
-    width: 15%;
-    padding: 16px;
-  }
-  
+
   .table-body-links {
-    width: 10%;
+    width: 15%;
   }
 
 .menu-icon {

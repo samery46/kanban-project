@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\TaskController; // Ditambahkan
+use App\Http\Controllers\UserController; // Ditambahkan
+use App\Http\Controllers\TaskFileController; // Ditambahkan
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;

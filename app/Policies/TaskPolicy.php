@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Task;
+namespace App\Policies;
+
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class TaskPolicy
 {
@@ -14,7 +14,7 @@ class TaskPolicy
         //
     }
 
-    public function update(User $user, Task $task): bool
+    public function update($user, $task): bool
     {
         return $user->id == $task->user_id;
     }
@@ -28,7 +28,7 @@ class TaskPolicy
     {
         return $user->id == $task->user_id;
     }
-    public function complete(User $user, Task $task): bool
+    public function complete($user, $task): bool
     {
         return $user->id == $task->user_id;
     }
@@ -40,8 +40,7 @@ class TaskPolicy
 
     protected function getUserPermissions($user)
     {
-        return $user
-            ->role()
+        return $user->role()
             ->with('permissions')
             ->get()
             ->pluck('permissions')
@@ -53,7 +52,7 @@ class TaskPolicy
     {
         $permissions = $this->getUserPermissions($user);
 
-        if ($permissions->contains('view-any-task')) {
+        if ($permissions->contains('view-any-tasks')) {
             return true;
         }
 
