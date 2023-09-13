@@ -23,9 +23,18 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('home', [TaskController::class, 'home']);
-Route::get('tasks', [TaskController::class, 'index']);
-Route::get('users', [UserController::class, 'index']);
-Route::get('roles', [RoleController::class, 'index']);
+// Route::get('tasks', [TaskController::class, 'index']);
+// Route::get('users', [UserController::class, 'index']);
+// Route::get('roles', [RoleController::class, 'index']);
+
+Route::resource('/tasks', TaskController::class);
+// Route::resource('/roles', RoleController::class);->middleware('auth:sanctum');
+Route::resource('/roles', RoleController::class);
+// Route::resource('/roles', RoleController::class);->middleware('auth:sanctum');
+Route::resource('/users', UserController::class);
+// Route::resource('/users', UserController::class);->middleware('auth:sanctum');
+
+
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
