@@ -29,7 +29,7 @@ class RoleController extends Controller
         return response()->json([
             'message'   => 'success',
             'data'      => new RoleResource($role),
-        ]);
+        ], Response::HTTP_OK);
     }
 
     public function show($id)
@@ -42,7 +42,7 @@ class RoleController extends Controller
             return response()->json([
                 'message'   => 'error',
                 'data'      => 'Role not found',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json([
@@ -59,7 +59,7 @@ class RoleController extends Controller
             return response()->json([
                 'message'   => 'error',
                 'data'      => 'Role not found',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $role->update([
@@ -69,7 +69,7 @@ class RoleController extends Controller
         return response()->json([
             'message'   => 'Role ' . $role->name . ' successfully updated',
             'data'      => new RoleResource($role),
-        ]);
+        ], Response::HTTP_OK);
     }
 
 
@@ -81,7 +81,7 @@ class RoleController extends Controller
             return response()->json([
                 'message'   => 'error',
                 'data'      => 'Role not found',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $role->delete();

@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response; // Untuk menampilkan Response::HTTP
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -25,10 +26,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user = User::create([
-            'name'     => $request->name,
+            'name'      => $request->name,
             'email'     => $request->email,
-            'password'     => $request->password,
-            'role_id'     => $request->role_id,
+            'password'  => Hash::make($request->password),
+            'role_id'   => $request->role_id,
         ]);
 
         return response()->json([
@@ -47,7 +48,7 @@ class UserController extends Controller
             return response()->json([
                 'message'   => 'error',
                 'data'      => 'User not found',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json([
@@ -61,10 +62,17 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json([
-                'message'   => 'error',
-                'data'      => 'User not found',
-            ]);
+            return response()->json(
+                [
+                    'message'   => 'error',
+                    'data'      => 'User not found',
+                ]        // foreach ($task->files as file) {
+                //     Storage::disk('public')->delete($file->path);
+                //     $file->delete();
+                // }
+                ,
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         $user->update([
@@ -77,7 +85,7 @@ class UserController extends Controller
         return response()->json([
             'message'   => 'User ' . $user->name . ' successfully updated',
             'data'      => new UserResource($user),
-        ]);
+        ], Response::HTTP_OK);
     }
 
     public function destroy($id)
@@ -88,7 +96,7 @@ class UserController extends Controller
             return response()->json([
                 'message'   => 'error',
                 'data'      => 'User not found',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $user->delete();

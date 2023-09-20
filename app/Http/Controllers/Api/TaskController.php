@@ -43,20 +43,6 @@ class TaskController extends Controller
         ], Response::HTTP_OK);
     }
 
-    // public function destroy()
-    // {
-    //     $tasks = Task::find($id);
-
-    //     foreach ($task->files as file) {
-    //         Storage::disk('public')->delete($file->path);
-    //         $file->delete();
-    //     }
-    //     return response()->json([
-    //         'message' => 'Taks ' . $task->name . 'Successfully deleted'
-    //     ], Response::HTTP_OK);
-    // }
-
-
     public function show($id)
     {
         // $article = auth()->user()->articles()->find($id);
@@ -67,7 +53,7 @@ class TaskController extends Controller
             return response()->json([
                 'message'   => 'error',
                 'data'      => 'Task not found',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json([
@@ -84,7 +70,7 @@ class TaskController extends Controller
             return response()->json([
                 'message'   => 'error',
                 'data'      => 'Task not found',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $task->update([
@@ -99,24 +85,24 @@ class TaskController extends Controller
         return response()->json([
             'message'   => 'User ' . $task->name . ' successfully updated',
             'data'      => new TaskResource($task),
-        ]);
+        ], Response::HTTP_OK);
     }
 
     public function destroy($id)
     {
         $task = Task::find($id);
 
-        // foreach ($task->files as file) {
-        //     Storage::disk('public')->delete($file->path);
-        //     $file->delete();
-        // }
-
         if (!$task) {
             return response()->json([
                 'message'   => 'error',
                 'data'      => 'Task not found',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
+
+        // foreach ($task->files as file) {
+        //     Storage::disk('public')->delete($file->path);
+        //     $file->delete();
+        // }
 
         $task->delete();
 

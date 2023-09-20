@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Notifications\OtpNotification;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\WelcomeEmailNotification;
+use Illuminate\Http\Response; // Untuk menampilkan Response::HTTP
 
 class AuthController extends Controller
 {
