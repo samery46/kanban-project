@@ -8,8 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response; // Untuk menampilkan Response::HTTP
-use Illuminate\Support\Facades\DB; // Dita
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth; // Ditambahkan
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -35,11 +36,17 @@ class TaskController extends Controller
     {
 
         $tasks = Task::all();
+
+        if ($tasks) {
+            return response()->json([
+                'message'   => 'All Tasks are successfully displayed',
+                'data'      => TaskResource::collection($tasks),
+            ], Response::HTTP_OK);
+        }
+
         return response()->json([
-            'code' => 200,
-            'message'   => 'success',
-            'data'      => TaskResource::collection($tasks),
-        ], Response::HTTP_OK);
+            'message'   => 'No successfully Tasks are displayed',
+        ], Response::HTTP_NOT_FOUND);
     }
 
     public function store(Request $request)
@@ -65,8 +72,7 @@ class TaskController extends Controller
                 'detail' => $request->detail,
                 'due_date' => $request->due_date,
                 'status' => $request->status,
-                'user_id' => $request->user_id,
-                // 'user_id' => Auth::user()->id,
+                'user_id' => Auth::user()->id,
             ]);
 
             $file = $request->file('file');
@@ -88,14 +94,12 @@ class TaskController extends Controller
             DB::commit();
 
             return response()->json([
-
                 'message'   => 'Task Created Successfully',
                 'tasks' => new TaskResource($task)
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
-                'code' => 200,
                 'message' => 'Task created unsuccessfully',
             ]);
         }
@@ -165,7 +169,27 @@ class TaskController extends Controller
         $task->delete();
 
         return response()->json([
-            'message'   => 'Taks ' . $task->name . ' successfully deleted'
+            'message'   => 'Task ' . $task->name . ' successfully deleted'
         ], Response::HTTP_OK);
+    }
+
+    public function move(int $id, Request $request)
+    {
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json([
+                'message'      => 'Task not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $task->update([
+            'status' => $request->status,
+        ]);
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Task ' . $task->id . ' successfully moved'
+        ]);
     }
 }

@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\TaskController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\TaskFileController;
+use App\Http\Controllers\Api\UserController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,9 +25,11 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('home', [TaskController::class, 'home'])->middleware('auth:sanctum');
-Route::resource('/tasks', TaskController::class);
+Route::resource('/tasks', TaskController::class)->middleware('auth:sanctum');
 Route::resource('/roles', RoleController::class)->middleware('auth:sanctum');
 Route::resource('/users', UserController::class)->middleware('auth:sanctum');
+Route::resource('/users', UserController::class)->middleware('auth:sanctum');
+Route::resource('/files', TaskFileController::class)->middleware('auth:sanctum');
 
 
 
