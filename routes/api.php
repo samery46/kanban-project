@@ -22,17 +22,10 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::get('home', [TaskController::class, 'home']);
-// Route::get('tasks', [TaskController::class, 'index']);
-// Route::get('users', [UserController::class, 'index']);
-// Route::get('roles', [RoleController::class, 'index']);
-
+Route::get('home', [TaskController::class, 'home'])->middleware('auth:sanctum');
 Route::resource('/tasks', TaskController::class);
-// Route::resource('/roles', RoleController::class);->middleware('auth:sanctum');
-Route::resource('/roles', RoleController::class);
-// Route::resource('/roles', RoleController::class);->middleware('auth:sanctum');
-Route::resource('/users', UserController::class);
-// Route::resource('/users', UserController::class);->middleware('auth:sanctum');
+Route::resource('/roles', RoleController::class)->middleware('auth:sanctum');
+Route::resource('/users', UserController::class)->middleware('auth:sanctum');
 
 
 

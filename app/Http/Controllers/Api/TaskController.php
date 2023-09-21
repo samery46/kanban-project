@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Task;
+use App\Models\TaskFile;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response; // Untuk menampilkan Response::HTTP
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB; // Dita
+use Illuminate\Support\Facades\Auth; // Ditambahkan
 
 class TaskController extends Controller
 {
-    //
     public function home()
     {
         $tasks = Task::get();
@@ -34,7 +35,6 @@ class TaskController extends Controller
     {
 
         $tasks = Task::all();
-        // dd($tasks);
         return response()->json([
             'code' => 200,
             'message'   => 'success',
@@ -42,60 +42,64 @@ class TaskController extends Controller
         ], Response::HTTP_OK);
     }
 
-    // public function store(Request $request)
-    // {
-    //     $request->validate(
-    //         [
-    //             'name' => 'required',
-    //             'due_date' => 'required',
-    //             'status' => 'required',
-    //             'file' => ['max:5000', 'mimes:pdf,jpeg,png'],
-    //         ],
-    //         [
-    //             'file.max' => 'The file size exceed 5 mb',
-    //             'file.mimes' => 'Must be a file of type: pdf,jpeg,png',
-    //         ],          
-    //         $request->all()
-    //     );
+    public function store(Request $request)
+    {
+        $request->validate(
+            [
+                'name' => 'required',
+                'due_date' => 'required',
+                'status' => 'required',
+                'file' => ['max:5000', 'mimes:pdf,jpeg,png'],
+            ],
+            [
+                'file.max' => 'The file size exceed 5 mb',
+                'file.mimes' => 'Must be a file of type: pdf,jpeg,png',
+            ],
+            $request->all()
+        );
 
-    //     DB::beginTransaction();
-    //     try {
-    //     Task::create([
-    //         'name' => $request->name,
-    //         'detail' => $request->detail,
-    //         'due_date' => $request->due_date,
-    //         'status' => $request->status,
-    //         'user_id' => Auth::user()->id,
-    //     ]);
-    // }
+        DB::beginTransaction();
+        try {
+            $task = Task::create([
+                'name' => $request->name,
+                'detail' => $request->detail,
+                'due_date' => $request->due_date,
+                'status' => $request->status,
+                'user_id' => $request->user_id,
+                // 'user_id' => Auth::user()->id,
+            ]);
 
-    //     $file = $request->file('file');
-    //     if ($file) {
-    //         $filename = $file->getClientOriginalName();
-    //         $path = $file->storePubliclyAs(
-    //             'tasks',
-    //             $file->hashName(),
-    //             'public'
-    //         );
+            $file = $request->file('file');
+            if ($file) {
+                $filename = $file->getClientOriginalName();
+                $path = $file->storePubliclyAs(
+                    'tasks',
+                    $file->hashName(),
+                    'public'
+                );
 
-    //         TaskFile::create([
-    //             'task_id' => $task->id,
-    //             'filename' => $filename,
-    //             'path' => $path,
-    //         ]);
-    //     }
-    //     $tasks = Task::all();
-    //     DB::commit();
-    //     return response()->json([
-    //         'code'=>200,
-    //         'message'=> 'Task created successfully',
-    //     ]);
-    //     DB::rollBack();
-    //     return response()->json([
-    //         'code'=>200,
-    //         'message'=> 'Task created unsuccessfully',
-    //     ]);
-    // }
+                TaskFile::create([
+                    'task_id' => $task->id,
+                    'filename' => $filename,
+                    'path' => $path,
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+
+                'message'   => 'Task Created Successfully',
+                'tasks' => new TaskResource($task)
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'code' => 200,
+                'message' => 'Task created unsuccessfully',
+            ]);
+        }
+    }
 
     public function show($id)
     {
@@ -145,7 +149,7 @@ class TaskController extends Controller
     public function destroy($id)
     {
         $task = Task::find($id);
-
+        // dd($task);
         if (!$task) {
             return response()->json([
                 'message'   => 'error',
@@ -153,7 +157,7 @@ class TaskController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        foreach ($task->files as file) {
+        foreach ($task->files as $file) {
             Storage::disk('public')->delete($file->path);
             $file->delete();
         }

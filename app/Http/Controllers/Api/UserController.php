@@ -66,11 +66,7 @@ class UserController extends Controller
                 [
                     'message'   => 'error',
                     'data'      => 'User not found',
-                ]        // foreach ($task->files as file) {
-                //     Storage::disk('public')->delete($file->path);
-                //     $file->delete();
-                // }
-                ,
+                ],
                 Response::HTTP_NOT_FOUND
             );
         }

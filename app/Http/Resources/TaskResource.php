@@ -8,12 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class TaskResource extends JsonResource
 {
 
-    //define properti
-    public $status;
-    public $message;
-    public $resource;
-
-
     /**
      * Transform the resource into an array.
      *
