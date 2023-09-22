@@ -8,12 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class TaskResource extends JsonResource
 {
 
-    //define properti
-    public $status;
-    public $message;
-    public $resource;
-
-
     /**
      * Transform the resource into an array.
      *
@@ -28,7 +22,8 @@ class TaskResource extends JsonResource
             'due_date'     => $this->due_date,
             'status'     => $this->status,
             'user_id' => $this->user_id,
-            'user' => $this->user->name
+            'user' => $this->user->name,
+            'file' => TaskFileResource::collection($this->files)
         ];
     }
 }

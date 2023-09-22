@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Notifications\OtpNotification;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\WelcomeEmailNotification;
+use Illuminate\Http\Response; // Untuk menampilkan Response::HTTP
 
 class AuthController extends Controller
 {
@@ -118,7 +119,7 @@ class AuthController extends Controller
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
-                'access_token' => $token,
+                'token' => $token,
                 'token_type'   => 'Bearer',
             ]);
         } catch (\Throwable $th) {
@@ -141,7 +142,7 @@ class AuthController extends Controller
         }
     }
 
-    public function updateProfile(Request $request)
+    public function update(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
