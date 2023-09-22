@@ -8,8 +8,9 @@ use App\Models\TaskFile;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Resources\TaskFileResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use Laravel\Sanctum\Sanctum;
 
 class TaskFileController extends Controller
 {
@@ -19,7 +20,7 @@ class TaskFileController extends Controller
 
         $file = TaskFile::all();
 
-        if ($file) {
+        if (count($file) > 0) {
             return response()->json([
                 'message'   => 'All file are successfully displayed',
                 'data'      => TaskFileResource::collection($file),
@@ -56,7 +57,7 @@ class TaskFileController extends Controller
         $filename = $file->getClientOriginalName();
         $path = $file->storePubliclyAs('tasks', $file->hashName(), 'public');
 
-        TaskFile::create([
+        $taskFile = TaskFile::create([
             'task_id' => $task->id,
             'filename' => $filename,
             'path' => $path,
@@ -65,11 +66,11 @@ class TaskFileController extends Controller
         return response()->json([
 
             'message'   => 'Task File Created Successfully',
-            'tasks' => new TaskFileResource($task)
+            'tasks' => new TaskFileResource($taskFile)
         ], Response::HTTP_CREATED);
     }
 
-    public function show($id)
+    public function show($task_id, $id)
     {
         $file = TaskFile::find($id);
 
@@ -108,4 +109,24 @@ class TaskFileController extends Controller
             'message'   => 'File ' . $file->name . ' successfully deleted'
         ], Response::HTTP_OK);
     }
+
+    // public function destroyAll($id)
+    // {
+    //     $files = TaskFile::where('user_id', Auth::id())->get();
+
+    //     if (!$files) {
+    //         return response()->json([
+    //             'message'      => 'File not found',
+    //         ], Response::HTTP_NOT_FOUND);
+    //     }
+
+    //     foreach ($files as $file) {
+    //         Storage::disk('public')->delete($file->path);
+    //         $file->delete();
+    //     }
+
+    //     return response()->json([
+    //         'message'   => 'File ' . $file->name . ' successfully deleted'
+    //     ], Response::HTTP_OK);
+    // }
 }

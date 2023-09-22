@@ -22,7 +22,8 @@ class TaskResource extends JsonResource
             'due_date'     => $this->due_date,
             'status'     => $this->status,
             'user_id' => $this->user_id,
-            'user' => $this->user->name
+            'user' => $this->user->name,
+            'file' => TaskFileResource::collection($this->files)
         ];
     }
 }

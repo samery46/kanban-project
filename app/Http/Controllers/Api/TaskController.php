@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response; // Untuk menampilkan Response::HTTP
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth; // Ditambahkan
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
@@ -35,7 +36,8 @@ class TaskController extends Controller
     public function index()
     {
 
-        $tasks = Task::all();
+        $tasks = Task::orderByDesc('id', 'name')->get();
+
 
         if ($tasks) {
             return response()->json([
@@ -126,6 +128,7 @@ class TaskController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $task = Task::find($id);
 
         if (!$task) {
@@ -153,6 +156,15 @@ class TaskController extends Controller
     public function destroy($id)
     {
         $task = Task::find($id);
+
+        if (!Gate::allows('deleteAnyTask', Task::class) && !Gate::allows('performAsTaskOwner', $task)) {
+            return response()->json([
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+
         // dd($task);
         if (!$task) {
             return response()->json([
