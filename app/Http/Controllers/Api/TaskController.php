@@ -38,6 +38,14 @@ class TaskController extends Controller
 
         $tasks = Task::orderByDesc('id', 'name')->get();
 
+        if (!Gate::allows('viewAnyTask', Task::class)) {
+            return response()->json([
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        } else {
+            $tasks = Task::where('user_id', Auth::user()->id)->get();
+        }
 
         if ($tasks) {
             return response()->json([
@@ -120,6 +128,13 @@ class TaskController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
+        if (!Gate::allows('performAsTaskOwner', $task)) {
+            return response()->json([
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         return response()->json([
             'message'   => 'success',
             'data'      => new TaskResource($task),
@@ -136,6 +151,13 @@ class TaskController extends Controller
                 'message'   => 'error',
                 'data'      => 'Task not found',
             ], Response::HTTP_NOT_FOUND);
+        }
+
+        if (!Gate::allows('updateAnyTask', Task::class) && !Gate::allows('performAsTaskOwner', $task)) {
+            return response()->json([
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         $task->update([
@@ -193,6 +215,13 @@ class TaskController extends Controller
             return response()->json([
                 'message'      => 'Task not found',
             ], Response::HTTP_NOT_FOUND);
+        }
+
+        if (!Gate::allows('updateAnyTask', Task::class) && !Gate::allows('performAsTaskOwner', $task)) {
+            return response()->json([
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         $task->update([
