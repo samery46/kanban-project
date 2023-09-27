@@ -6,9 +6,11 @@ use App\Models\User; // Ditambahkan
 use App\Models\Role; // Ditambahkan
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Response; // Untuk menampilkan Response::HTTP
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+
 
 class UserController extends Controller
 {
@@ -16,6 +18,13 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+
+        if (Gate::authorize('viewAnyRoles', Role::class)) {
+            return response()->json([
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
 
         return response()->json([
             'message'   => 'success',
@@ -69,6 +78,13 @@ class UserController extends Controller
                 ],
                 Response::HTTP_NOT_FOUND
             );
+        }
+
+        if (Gate::authorize('viewAnyRoles', Role::class)) {
+            return response()->json([
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         $user->update([
